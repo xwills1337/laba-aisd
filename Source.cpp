@@ -100,6 +100,19 @@ public:
 		temp += v;
 		return temp;
 	}
+	point& operator[] (const int index)
+	{
+		if (index < count && count != 0) return line[index];
+		else throw "Error! Element with this index does not exist.";
+	}
+
+	double calculate()
+	{
+		if (count == 0) throw "Error! Line has no vertices";
+		double rez = 0;
+		for (int i = 0; i < count - 1; i++) rez += sqrt(pow((line[i + 1].x - line[i].x), 2) + pow((line[i + 1].y - line[i].y), 2));
+		return rez;
+	}
 };
 
 
