@@ -38,7 +38,16 @@ public:
 			line[i].x = v.line[i].x;
 			line[i].y = v.line[i].y;
 		}
-
+	}
+	~broken_line()
+	{
+		clear();
+	}
+	void clear()
+	{
+		free(line);
+		size = 0;
+		count = 0;
 	}
 };
 
