@@ -113,6 +113,21 @@ public:
 		for (int i = 0; i < count - 1; i++) rez += sqrt(pow((line[i + 1].x - line[i].x), 2) + pow((line[i + 1].y - line[i].y), 2));
 		return rez;
 	}
+	void print()
+	{
+		cout << size << endl << count << endl;
+		for (int i = 0; i < count; i++) cout << line[i].x << " " << line[i].y << endl;
+		cout << endl;
+	}
+
+	void print_graf()
+	{
+		for (int i = 0; i < count - 1; i++) g.DrawLine(line[i].x, line[i].y, line[i + 1].x, line[i + 1].y);
+	}
+
+	int get_size() { return size; }
+	int get_count() { return count; }
+	int get_grow() { return grow; }
 };
 
 
