@@ -38,7 +38,6 @@ static void init_gdi() {
 }
 
 
-
 static void make_window(const LPCWSTR name, int w, int h, HWND* result, std::condition_variable& cv, std::mutex& m) {
 	std::call_once(gdi_init_flag, init_gdi);
 	HWND window;
