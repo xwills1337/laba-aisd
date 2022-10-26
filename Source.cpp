@@ -64,6 +64,27 @@ public:
 		}
 		return *this;
 	}
+	broken_line& operator += (const broken_line& v)
+	{
+		while (size < count + v.count) size += grow;
+
+		point* tmp = (point*)realloc(line, sizeof(point) * size);
+		if (tmp != NULL) line = tmp;
+
+		for (int i = 0; i < v.count; i++)
+		{
+			line[i + count].x = v.line[i].x;
+			line[i + count].y = v.line[i].y;
+		}
+		count += v.count;
+		return *this;
+	}
+	broken_line operator + (const broken_line& v)
+	{
+		broken_line temp(*this);
+		temp += v;
+		return temp;
+	}
 };
 
 
