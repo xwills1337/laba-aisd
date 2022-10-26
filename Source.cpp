@@ -117,7 +117,7 @@ public:
 	}
 	void print()
 	{
-		cout << size << endl << count << endl;
+		cout << "size: " << size << endl << "count: " << count << endl;
 		for (int i = 0; i < count; i++) cout << line[i].x << " " << line[i].y << endl;
 		cout << endl;
 	}
@@ -150,8 +150,6 @@ int main()
 {
 	broken_line a(5);
 	broken_line b(5);
-	b[0].x = 4;
-	b[3].y = 6;
 	point f;
 	f.x = 4;
 	f.y = 5;
@@ -169,16 +167,27 @@ int main()
 		if (z == '1')
 		{
 			int index, value_x, value_y;
+			char l = '3';
 			cout << "Enter index" << endl;
 			cin >> index;
 			cout << "Enter value for x" << endl;
 			cin >> value_x;
 			cout << "Enter value for y" << endl;
 			cin >> value_y;
+			cout << "1 - add to line a\n2 - add to line b" << endl;
+			while (l != '1' && l != '2') l = getch();
 			try
 			{
-				a[index].x = value_x;
-				a[index].y = value_y;
+				if (l == '1')
+				{
+					a[index].x = value_x;
+					a[index].y = value_y;
+				}
+				else
+				{
+					b[index].x = value_x;
+					b[index].y = value_y;
+				}	
 			}
 			catch (const char* msg)
 			{
