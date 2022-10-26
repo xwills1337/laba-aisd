@@ -49,6 +49,21 @@ public:
 		size = 0;
 		count = 0;
 	}
+	broken_line& operator = (const broken_line& v)
+	{
+		clear();
+		size = v.size;
+		count = v.count;
+		grow = v.grow;
+		line = (point*)malloc(sizeof(point) * size);
+
+		for (int i = 0; i < count; i++)
+		{
+			line[i].x = v.line[i].x;
+			line[i].y = v.line[i].y;
+		}
+		return *this;
+	}
 };
 
 
