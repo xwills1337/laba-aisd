@@ -130,9 +130,13 @@ public:
 	int get_grow() { return grow; }
 };
 
-
-
-
+broken_line operator + (const point& p, const broken_line& v)
+{
+	broken_line temp(0);
+	temp += p;
+	temp += v;
+	return temp;
+}
 
 
 
