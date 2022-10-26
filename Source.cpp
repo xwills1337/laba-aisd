@@ -85,6 +85,21 @@ public:
 		temp += v;
 		return temp;
 	}
+	broken_line& operator += (const point& v)
+	{
+		if (count + 1 > size) size += grow;
+		point* tmp = (point*)realloc(line, sizeof(point) * size);
+		if (tmp != NULL) line = tmp;
+		line[count].x = v.x;
+		line[count++].y = v.y;
+		return *this;
+	}
+	broken_line operator + (const point& v)
+	{
+		broken_line temp(*this);
+		temp += v;
+		return temp;
+	}
 };
 
 
