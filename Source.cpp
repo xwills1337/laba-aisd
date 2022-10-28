@@ -5,7 +5,7 @@
 #include"Graphics.h"
 using namespace std;
 
-Graphics g;
+Graphics g(1000, 1000);
 
 struct point
 {
@@ -59,12 +59,7 @@ public:
 
 	broken_line& operator = (const broken_line& v)
 	{
-		clear();
-		size = v.size;
-		count = v.count;
-		grow = v.grow;
-		line = (point*)malloc(sizeof(point) * size);
-
+		if (size < v.count || count > v.count) throw "Right object data cannot be passed to left object";
 		for (int i = 0; i < count; i++)
 		{
 			line[i].x = v.line[i].x;
@@ -135,7 +130,7 @@ public:
 
 	void print_graf()
 	{
-		for (int i = 0; i < count - 1; i++) g.DrawLine(line[i].x, line[i].y, line[i + 1].x, line[i + 1].y);
+		for (int i = 0; i < count - 1; i++) g.DrawLine(float(line[i].x), float(line[i].y), float(line[i + 1].x), float(line[i + 1].y));
 	}
 
 	int get_size() { return size; }
@@ -213,9 +208,17 @@ int main()
 			a.print();
 			cout << "line b" << endl;
 			b.print();
-			broken_line d = a + b;
-			cout << "line a + line b" << endl;
-			d.print();
+			try
+			{
+				broken_line d(10);
+				d = a + b;
+				cout << "line a + line b" << endl;
+				d.print();
+			}
+			catch (const char* msg)
+			{
+				cout << msg << endl;
+			}
 			getch();
 		}
 		if (z == '3')
@@ -223,9 +226,17 @@ int main()
 			cout << "line a" << endl;
 			a.print();
 			cout << "point f" << endl << f.x << " " << f.y <<endl;
-			broken_line d = a + f;
-			cout << "line a + point f" << endl;
-			d.print();
+			try
+			{
+				broken_line d(6);
+				d = a + f;
+				cout << "line a + point f" << endl;
+				d.print();
+			}
+			catch (const char* msg)
+			{
+				cout << msg << endl;
+			}
 			getch();
 		}
 		if (z == '4')
@@ -233,10 +244,17 @@ int main()
 			cout << "line a" << endl;
 			a.print();
 			cout << "point f" << endl << f.x << " " << f.y << endl;
-			broken_line d = f + a;
-			cout << "point f + line a" << endl;
-			d.print();
-			getch();
+			try
+			{
+				broken_line d(6);
+				d = f + a;
+				cout << "point f + line a" << endl;
+				d.print();
+			}
+			catch (const char* msg)
+			{
+				cout << msg << endl;
+			}
 		}
 		if (z == '5')
 		{
