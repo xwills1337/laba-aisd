@@ -5,7 +5,7 @@
 #include"Graphics.h"
 using namespace std;
 
-Graphics g(1000, 1000);
+Graphics g;
 
 struct point
 {
@@ -146,10 +146,41 @@ broken_line operator + (const point& p, const broken_line& v)
 	return temp;
 }
 
+bool test_int(char* b)
+{
+	if (*b == '-') b++;
+	if (*b == 0) return false;
+	if (*b == '0' && *(b + 1) != 0) return false;
+	while (*b)
+	{
+		if (*b < '0' || *b>'9') return false;
+		b++;
+	}
+	return true;
+}
 
-
-
-
+bool test_double(char* b)
+{
+	if (*b == '-') b++;
+	if (*b == 0) return false;
+	if (*b == '0' && (*(b + 1) != 0 && *(b + 1) != '.')) return false;
+	while (*b != 0 && *b != '.')
+	{
+		if (*b < '0' || *b>'9') return false;
+		b++;
+	}
+	if (*b == '.')
+	{
+		b++;
+		if (*b == 0) return false;
+		while (*b)
+		{
+			if (*b < '0' || *b>'9') return false;
+			b++;
+		}
+	}
+	return true;
+}
 
 
 int main()
@@ -169,11 +200,11 @@ int main()
 		cout << "5 - Calculate" << endl;
 		cout << "6 - Tack" << endl;
 		cout << "7 - Exit" << endl;
-		char z = getch();
+		int z = getch();
 		if (z == '1')
 		{
 			int index, value_x, value_y;
-			char l = '3';
+			int l = '3';
 			cout << "Enter index" << endl;
 			cin >> index;
 			cout << "Enter value for x" << endl;
