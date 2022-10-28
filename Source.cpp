@@ -22,7 +22,7 @@ public:
 	{
 		if (_size < 0) throw "Error! Array size cannot be negative";
 		if (_grow < 0) throw "Error! grow cannot be negative";
-		line = (point*)malloc(sizeof(point) * size);
+		line = new point[size];
 		count = size;
 		for (int i = 0; i < count; i++)
 		{
@@ -36,7 +36,7 @@ public:
 		size = v.size;
 		count = v.count;
 		grow = v.grow;
-		line = (point*)malloc(sizeof(point) * size);
+		line = new point[size];
 		for (int i = 0; i < count; i++)
 		{
 			line[i].x = v.line[i].x;
@@ -51,7 +51,7 @@ public:
 
 	void clear()
 	{
-		free(line);
+		delete[] line;
 		size = 0;
 		count = 0;
 	}
@@ -71,13 +71,19 @@ public:
 	{
 		if (size - (count + v.count) > grow) size = count + v.count;
 		else size += grow;
-		point* tmp = (point*)realloc(line, sizeof(point) * size);
-		if (tmp != NULL) line = tmp;
+		point* tmp = new point[size];
+		for (int i = 0; i < count; i++)
+		{
+			tmp[i].x = line[i].x;
+			tmp[i].y = line[i].y;
+		}
 		for (int i = 0; i < v.count; i++)
 		{
-			line[i + count].x = v.line[i].x;
-			line[i + count].y = v.line[i].y;
+			tmp[i + count].x = v.line[i].x;
+			tmp[i + count].y = v.line[i].y;
 		}
+		delete[] line;
+		line = tmp;
 		count += v.count;
 		return *this;
 	}
@@ -92,10 +98,16 @@ public:
 	broken_line& operator += (const point& v)
 	{
 		if (count + 1 > size) size += grow;
-		point* tmp = (point*)realloc(line, sizeof(point) * size);
-		if (tmp != NULL) line = tmp;
-		line[count].x = v.x;
-		line[count++].y = v.y;
+		point* tmp = new point[size];
+		for (int i = 0; i < count; i++)
+		{
+			tmp[i].x = line[i].x;
+			tmp[i].y = line[i].y;
+		}
+		tmp[count].x = v.x;
+		tmp[count++].y = v.y;
+		delete[] line;
+		line = tmp;
 		return *this;
 	}
 
@@ -210,7 +222,6 @@ int main()
 	point f;
 	f.x = 4;
 	f.y = 5;
-	int j = scan(false);
 	while (true)
 	{
 		system("cls");
@@ -222,16 +233,18 @@ int main()
 		std::cout << "6 - Tack" << std::endl;
 		std::cout << "7 - Exit" << std::endl;
 		int z = getch();
+		system("cls");
 		if (z == '1')
 		{
-			int index, value_x, value_y;
+			int index;
+			double value_x, value_y;
 			int l = '3';
 			std::cout << "Enter index" << std::endl;
-			std::cin >> index;
+			index = int(scan(true));
 			std::cout << "Enter value for x" << std::endl;
-			std::cin >> value_x;
+			value_x = scan(false);
 			std::cout << "Enter value for y" << std::endl;
-			std::cin >> value_y;
+			value_y = scan(false);
 			std::cout << "1 - add to line a\n2 - add to line b" << std::endl;
 			while (l != '1' && l != '2') l = getch();
 			try
@@ -277,7 +290,7 @@ int main()
 		{
 			std::cout << "line a" << std::endl;
 			a.print();
-			std::cout << "point f" << std::endl << f.x << " " << f.y << std::endl;
+			std::cout << "point f" << std::endl << f.x << " " << f.y << std::endl << std::endl;
 			try
 			{
 				broken_line d(6);
@@ -295,7 +308,7 @@ int main()
 		{
 			std::cout << "line a" << std::endl;
 			a.print();
-			std::cout << "point f" << std::endl << f.x << " " << f.y << std::endl;
+			std::cout << "point f" << std::endl << f.x << " " << f.y << std::endl << std::endl;
 			try
 			{
 				broken_line d(6);
@@ -307,6 +320,7 @@ int main()
 			{
 				std::cout << msg << std::endl;
 			}
+			getch();
 		}
 		if (z == '5')
 		{
