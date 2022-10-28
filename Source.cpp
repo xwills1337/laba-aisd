@@ -14,7 +14,7 @@ class broken_line
 {
 	point* line = NULL;
 	int size, count, grow;
-
+	const double accuracy = 0.0000000000001;
 public:
 
 	broken_line(int _size = 0, int _grow = 5) : size(_size), grow(_grow)
@@ -129,7 +129,7 @@ public:
 	bool operator == (const broken_line& v)
 	{
 		if (size != v.size || count != v.count || grow != v.grow) return false;
-		for (int i = 0; i < count; i++) if (line[i].x != v.line[i].x || line[i].y != v.line[i].y) return false;
+		for (int i = 0; i < count; i++) if (accuracy < abs(line[i].x != v.line[i].x) || accuracy < abs(line[i].y != v.line[i].y)) return false;
 		return true;
 	}
 	bool operator != (const broken_line& v)
