@@ -1,7 +1,6 @@
 #include<cstdio>
 #include<iostream>
 #include<conio.h>
-#include<windows.h>
 #include"Graphics.h"
 
 Graphics g;
@@ -121,7 +120,7 @@ public:
 		return temp;
 	}
 
-	point& operator[] (const int index)
+	point& operator[] (int index) const
 	{
 		if (index < count && count != 0) return line[index];
 		else throw "Error! Element with this index does not exist.";
@@ -135,21 +134,14 @@ public:
 		return rez;
 	}
 
-	void print()
-	{
-		std::cout << "size: " << size << std::endl << "count: " << count << std::endl;
-		for (int i = 0; i < count; i++) std::cout << line[i].x << " " << line[i].y << std::endl;
-		std::cout << std::endl;
-	}
-
 	void print_graf()
 	{
 		for (int i = 0; i < count - 1; i++) g.DrawLine(float(line[i].x), float(line[i].y), float(line[i + 1].x), float(line[i + 1].y));
 	}
 
-	int get_size() { return size; }
-	int get_count() { return count; }
-	int get_grow() { return grow; }
+	int get_size() const { return size; }
+	int get_count() const { return count; }
+	int get_grow() const { return grow; }
 };
 
 broken_line operator + (const point& p, const broken_line& v)
@@ -158,6 +150,14 @@ broken_line operator + (const point& p, const broken_line& v)
 	temp += p;
 	temp += v;
 	return temp;
+}
+
+std::ostream& operator << (std::ostream& os, const broken_line& v)
+{
+	os << "size: " << v.get_size() << std::endl << "count: " << v.get_count() << std::endl;
+	for (int i = 0; i < v.get_count(); i++) os << v[i].x << " " << v[i].y << std::endl;
+	os << std::endl;
+	return os;
 }
 
 bool test_int(char* b)
@@ -273,15 +273,15 @@ int main()
 		if (z == '2')
 		{
 			std::cout << "line a" << std::endl;
-			a.print();
+			std::cout << a;
 			std::cout << "line b" << std::endl;
-			b.print();
+			std::cout << b;
 			try
 			{
 				broken_line d(10);
 				d = a + b;
 				std::cout << "line a + line b" << std::endl;
-				d.print();
+				std::cout << d;
 			}
 			catch (const char* msg)
 			{
@@ -292,14 +292,14 @@ int main()
 		if (z == '3')
 		{
 			std::cout << "line a" << std::endl;
-			a.print();
+			std::cout << a;
 			std::cout << "point f" << std::endl << f.x << " " << f.y << std::endl << std::endl;
 			try
 			{
 				broken_line d(6);
 				d = a + f;
 				std::cout << "line a + point f" << std::endl;
-				d.print();
+				std::cout << d;
 			}
 			catch (const char* msg)
 			{
@@ -310,14 +310,14 @@ int main()
 		if (z == '4')
 		{
 			std::cout << "line a" << std::endl;
-			a.print();
+			std::cout << a;
 			std::cout << "point f" << std::endl << f.x << " " << f.y << std::endl << std::endl;
 			try
 			{
 				broken_line d(6);
 				d = f + a;
 				std::cout << "point f + line a" << std::endl;
-				d.print();
+				std::cout << d;
 			}
 			catch (const char* msg)
 			{
@@ -328,7 +328,7 @@ int main()
 		if (z == '5')
 		{
 			std::cout << "line a" << std::endl;
-			a.print();
+			std::cout << a;
 			std::cout << "lengh line a: " << a.calculate();
 			if (getch()) z = '0';
 		}
