@@ -3,7 +3,6 @@
 #include<conio.h>
 #include<windows.h>
 #include"Graphics.h"
-using namespace std;
 
 Graphics g;
 
@@ -123,9 +122,9 @@ public:
 
 	void print()
 	{
-		cout << "size: " << size << endl << "count: " << count << endl;
-		for (int i = 0; i < count; i++) cout << line[i].x << " " << line[i].y << endl;
-		cout << endl;
+		std::cout << "size: " << size << std::endl << "count: " << count << std::endl;
+		for (int i = 0; i < count; i++) std::cout << line[i].x << " " << line[i].y << std::endl;
+		std::cout << std::endl;
 	}
 
 	void print_graf()
@@ -148,6 +147,7 @@ broken_line operator + (const point& p, const broken_line& v)
 
 bool test_int(char* b)
 {
+	
 	if (*b == '-') b++;
 	if (*b == 0) return false;
 	if (*b == '0' && *(b + 1) != 0) return false;
@@ -183,6 +183,26 @@ bool test_double(char* b)
 }
 
 
+double scan(bool n) 
+{
+	bool i = false; 
+	while (true)
+	{
+		char* str = new char[256];
+		std::cin.getline(str, 256);
+		if (n == true) i = test_int(str);
+		else i = test_double(str);
+		if (i)
+		{
+			double x = atof(str);
+			delete[] str;
+			return x;
+		}
+		else puts("Wrong data");
+		delete []str;
+	}
+}
+
 int main()
 {
 	broken_line a(5);
@@ -190,28 +210,29 @@ int main()
 	point f;
 	f.x = 4;
 	f.y = 5;
+	int j = scan(false);
 	while (true)
 	{
 		system("cls");
-		cout << "1 - Enter value by index" << endl;
-		cout << "2 - Obj broken_list + obj broken_list" << endl;
-		cout << "3 - Obj broken_list + obj point" << endl;
-		cout << "4 - Obj point + obj broken_list" << endl;
-		cout << "5 - Calculate" << endl;
-		cout << "6 - Tack" << endl;
-		cout << "7 - Exit" << endl;
+		std::cout << "1 - Enter value by index" << std::endl;
+		std::cout << "2 - Obj broken_list + obj broken_list" << std::endl;
+		std::cout << "3 - Obj broken_list + obj point" << std::endl;
+		std::cout << "4 - Obj point + obj broken_list" << std::endl;
+		std::cout << "5 - Calculate" << std::endl;
+		std::cout << "6 - Tack" << std::endl;
+		std::cout << "7 - Exit" << std::endl;
 		int z = getch();
 		if (z == '1')
 		{
 			int index, value_x, value_y;
 			int l = '3';
-			cout << "Enter index" << endl;
-			cin >> index;
-			cout << "Enter value for x" << endl;
-			cin >> value_x;
-			cout << "Enter value for y" << endl;
-			cin >> value_y;
-			cout << "1 - add to line a\n2 - add to line b" << endl;
+			std::cout << "Enter index" << std::endl;
+			std::cin >> index;
+			std::cout << "Enter value for x" << std::endl;
+			std::cin >> value_x;
+			std::cout << "Enter value for y" << std::endl;
+			std::cin >> value_y;
+			std::cout << "1 - add to line a\n2 - add to line b" << std::endl;
 			while (l != '1' && l != '2') l = getch();
 			try
 			{
@@ -228,70 +249,70 @@ int main()
 			}
 			catch (const char* msg)
 			{
-				cout << msg << endl;
+				std::cout << msg << std::endl;
 				getch();
 			}
 			system("cls");
 		}
 		if (z == '2')
 		{
-			cout << "line a" << endl;
+			std::cout << "line a" << std::endl;
 			a.print();
-			cout << "line b" << endl;
+			std::cout << "line b" << std::endl;
 			b.print();
 			try
 			{
 				broken_line d(10);
 				d = a + b;
-				cout << "line a + line b" << endl;
+				std::cout << "line a + line b" << std::endl;
 				d.print();
 			}
 			catch (const char* msg)
 			{
-				cout << msg << endl;
+				std::cout << msg << std::endl;
 			}
 			getch();
 		}
 		if (z == '3')
 		{
-			cout << "line a" << endl;
+			std::cout << "line a" << std::endl;
 			a.print();
-			cout << "point f" << endl << f.x << " " << f.y <<endl;
+			std::cout << "point f" << std::endl << f.x << " " << f.y << std::endl;
 			try
 			{
 				broken_line d(6);
 				d = a + f;
-				cout << "line a + point f" << endl;
+				std::cout << "line a + point f" << std::endl;
 				d.print();
 			}
 			catch (const char* msg)
 			{
-				cout << msg << endl;
+				std::cout << msg << std::endl;
 			}
 			getch();
 		}
 		if (z == '4')
 		{
-			cout << "line a" << endl;
+			std::cout << "line a" << std::endl;
 			a.print();
-			cout << "point f" << endl << f.x << " " << f.y << endl;
+			std::cout << "point f" << std::endl << f.x << " " << f.y << std::endl;
 			try
 			{
 				broken_line d(6);
 				d = f + a;
-				cout << "point f + line a" << endl;
+				std::cout << "point f + line a" << std::endl;
 				d.print();
 			}
 			catch (const char* msg)
 			{
-				cout << msg << endl;
+				std::cout << msg << std::endl;
 			}
 		}
 		if (z == '5')
 		{
-			cout << "line a" << endl;
+			std::cout << "line a" << std::endl;
 			a.print();
-			cout << "lengh line a: " << a.calculate();
+			std::cout << "lengh line a: " << a.calculate();
 			getch();
 		}
 		if (z == '6')
