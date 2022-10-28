@@ -126,6 +126,16 @@ public:
 		else throw "Error! Element with this index does not exist.";
 	}
 
+	bool operator == (const broken_line& v)
+	{
+		if (size != v.size || count != v.count || grow != v.grow) return false;
+		for (int i = 0; i < count; i++) if (line[i].x != v.line[i].x || line[i].y != v.line[i].y) return false;
+		return true;
+	}
+	bool operator != (const broken_line& v)
+	{
+		return !(*this == v);
+	}
 	double calculate()
 	{
 		double rez = 0;
@@ -229,12 +239,14 @@ int main()
 	{
 		system("cls");
 		std::cout << "1 - Enter value by index" << std::endl;
-		std::cout << "2 - Obj broken_list + obj broken_list" << std::endl;
-		std::cout << "3 - Obj broken_list + obj point" << std::endl;
-		std::cout << "4 - Obj point + obj broken_list" << std::endl;
+		std::cout << "2 - Obj broken_line + obj broken_line" << std::endl;
+		std::cout << "3 - Obj broken_line + obj point" << std::endl;
+		std::cout << "4 - Obj point + obj broken_line" << std::endl;
 		std::cout << "5 - Calculate" << std::endl;
 		std::cout << "6 - Tack" << std::endl;
-		std::cout << "7 - Exit" << std::endl;
+		std::cout << "7 - Print obj broken_line" << std::endl;
+		std::cout << "8 - Compare obj a and obj b" << std::endl;
+		std::cout << "9 - Exit" << std::endl;
 		int z = getch();
 		system("cls");
 		if (z == '1')
@@ -345,6 +357,21 @@ int main()
 			t[3].y = 100;
 			t.print_graf();
 		}
-		if (z == '7') return 0;
+		if (z == '7')
+		{
+			int l = '3';
+			std::cout << "1 - print line a\n2 - print line b" << std::endl;
+			while (l != '1' && l != '2') l = getch();
+			if (l == '1') std::cout << a;
+			else std::cout << b;
+			if (getch()) z = '0';
+		}
+		if (z == '8')
+		{
+			if (a == b) std::cout << "Objects are the same";
+			if (a != b) std::cout << "Objects are different";
+			if (getch()) z = '0';
+		}
+		if (z == '9') return 0;
 	}
 }
