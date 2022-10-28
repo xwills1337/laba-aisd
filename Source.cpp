@@ -37,7 +37,7 @@ public:
 		count = v.count;
 		grow = v.grow;
 		line = new point[size];
-		for (int i = 0; i < count; i++)
+		for (int i = 0; i < count && i < size; i++)
 		{
 			line[i].x = v.line[i].x;
 			line[i].y = v.line[i].y;
@@ -72,15 +72,15 @@ public:
 		if (size - (count + v.count) > grow) size = count + v.count;
 		else size += grow;
 		point* tmp = new point[size];
-		for (int i = 0; i < count; i++)
+		for (int i = 0; i < count && i < size; i++)
 		{
 			tmp[i].x = line[i].x;
 			tmp[i].y = line[i].y;
 		}
-		for (int i = 0; i < v.count; i++)
+		for (int i = 0, j = count; i < v.count && j < size; i++, j++)
 		{
-			tmp[i + count].x = v.line[i].x;
-			tmp[i + count].y = v.line[i].y;
+			tmp[j].x = v.line[i].x;
+			tmp[j].y = v.line[i].y;
 		}
 		delete[] line;
 		line = tmp;
@@ -99,13 +99,16 @@ public:
 	{
 		if (count + 1 > size) size += grow;
 		point* tmp = new point[size];
-		for (int i = 0; i < count; i++)
+		for (int i = 0; i < count && i < size; i++)
 		{
 			tmp[i].x = line[i].x;
 			tmp[i].y = line[i].y;
 		}
-		tmp[count].x = v.x;
-		tmp[count++].y = v.y;
+		if (count < size)
+		{
+			tmp[count].x = v.x;
+			tmp[count++].y = v.y;
+		}
 		delete[] line;
 		line = tmp;
 		return *this;
@@ -174,7 +177,7 @@ bool test_int(char* b)
 bool test_double(char* b)
 {
 	if (*b == '-') b++;
-	if (*b == 0) return false;
+	if (*b == 0 || *b == '.') return false;
 	if (*b == '0' && (*(b + 1) != 0 && *(b + 1) != '.')) return false;
 	while (*b != 0 && *b != '.')
 	{
@@ -263,7 +266,7 @@ int main()
 			catch (const char* msg)
 			{
 				std::cout << msg << std::endl;
-				getch();
+				if (getch()) z = '0';
 			}
 			system("cls");
 		}
@@ -284,7 +287,7 @@ int main()
 			{
 				std::cout << msg << std::endl;
 			}
-			getch();
+			if (getch()) z = '0';
 		}
 		if (z == '3')
 		{
@@ -302,7 +305,7 @@ int main()
 			{
 				std::cout << msg << std::endl;
 			}
-			getch();
+			if (getch()) z = '0';
 		}
 		if (z == '4')
 		{
@@ -320,14 +323,14 @@ int main()
 			{
 				std::cout << msg << std::endl;
 			}
-			getch();
+			if (getch()) z = '0';
 		}
 		if (z == '5')
 		{
 			std::cout << "line a" << std::endl;
 			a.print();
 			std::cout << "lengh line a: " << a.calculate();
-			getch();
+			if (getch()) z = '0';
 		}
 		if (z == '6')
 		{
@@ -341,7 +344,6 @@ int main()
 			t[3].x = 150;
 			t[3].y = 100;
 			t.print_graf();
-			getch();
 		}
 		if (z == '7') return 0;
 	}
