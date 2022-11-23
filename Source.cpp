@@ -13,6 +13,15 @@ struct point
 };
 
 template <class Type>
+class broken_line;
+
+template <class Type>
+double calculate(const broken_line<Type>& v);
+
+template <class Type>
+void print_graf(const broken_line<Type>& v);
+
+template <class Type>
 class broken_line
 {
 	point<Type>* line;
@@ -139,22 +148,14 @@ public:
 		return !(*this == v);
 	}
 
-	double calculate()
-	{
-		double rez = 0;
-		if (count < 2) return rez;
-		for (int i = 0; i < count - 1; i++) rez += sqrt(pow((line[i + 1].x - line[i].x), 2) + pow((line[i + 1].y - line[i].y), 2));
-		return rez;
-	}
+	friend double calculate<>(const broken_line<Type>& v);
 
-	void print_graf()
-	{
-		for (int i = 0; i < count - 1; i++) g.DrawLine(float(line[i].x), float(line[i].y), float(line[i + 1].x), float(line[i + 1].y));
-	}
-
+	friend void print_graf<>(const broken_line<Type>& v);
+	
 	int get_size() const { return size; }
 	int get_count() const { return count; }
 	int get_grow() const { return grow; }
+
 	friend broken_line<Type> operator + (const point<Type>& p, const broken_line<Type>& v)
 	{
 		broken_line temp(0);
@@ -162,6 +163,7 @@ public:
 		temp += v;
 		return temp;
 	}
+
 	friend std::ostream& operator << (std::ostream& os, const broken_line& v)
 	{
 		os << "size: " << v.get_size() << std::endl << "count: " << v.get_count() << std::endl;
@@ -170,6 +172,34 @@ public:
 		return os;
 	}
 };
+
+template <class Type>
+double calculate(const broken_line<Type>& v)
+{
+	double rez = 0;
+	if (v.count < 2) return rez;
+	for (int i = 0; i < v.count - 1; i++) rez += sqrt(pow((v.line[i + 1].x - v.line[i].x), 2) + pow((v.line[i + 1].y - v.line[i].y), 2));
+	return rez;
+}
+template <>
+double calculate(const broken_line<std::complex<double>>& v)
+{
+	double rez = 0;
+	if (v.count < 2) return rez;
+	for (int i = 0; i < v.count - 1; i++) rez += sqrt(pow((v.line[i + 1].x.real() - v.line[i].x.real()), 2) + pow((v.line[i + 1].y.real() - v.line[i].y.real()), 2));
+	return rez;
+}
+
+template <class Type>
+void print_graf(const broken_line<Type>& v)
+{
+	for (int i = 0; i < v.count - 1; i++) g.DrawLine(float(v.line[i].x), float(v.line[i].y), float(v.line[i + 1].x), float(v.line[i + 1].y));
+}
+template <>
+void print_graf(const broken_line<std::complex<double>>& v)
+{
+	for (int i = 0; i < v.count - 1; i++) g.DrawLine(float(v.line[i].x.real()), float(v.line[i].y.real()), float(v.line[i + 1].x.real()), float(v.line[i + 1].y.real()));
+}
 
 bool test_int(char* b)
 {
@@ -395,7 +425,7 @@ int main()
 				{
 					std::cout << "line a" << std::endl;
 					std::cout << a;
-					std::cout << "lengh line a: " << a.calculate();
+					std::cout << "lengh line a: " << calculate<int>(a);
 					if (getch()) z = '0';
 				}
 				if (z == '6')
@@ -409,7 +439,7 @@ int main()
 					t[2].y = 100;
 					t[3].x = 150;
 					t[3].y = 100;
-					t.print_graf();
+					print_graf<int>(t);
 				}
 				if (z == '7')
 				{
@@ -542,7 +572,7 @@ int main()
 				{
 					std::cout << "line a" << std::endl;
 					std::cout << a;
-					std::cout << "lengh line a: " << a.calculate();
+					std::cout << "lengh line a: " << calculate<double>(a);
 					if (getch()) z = '0';
 				}
 				if (z == '6')
@@ -556,7 +586,7 @@ int main()
 					t[2].y = 100;
 					t[3].x = 150;
 					t[3].y = 100;
-					t.print_graf();
+					print_graf<double>(t);
 				}
 				if (z == '7')
 				{
@@ -578,7 +608,150 @@ int main()
 		}
 		if (zl == '3')
 		{
-			return 0;
+			broken_line<std::complex<double>> a(5);
+			broken_line<std::complex<double>> b(5);
+			point<std::complex<double>> f;
+			f.x = 4.0;
+			f.y = 5.0;
+			while (true)
+			{
+				system("cls");
+				std::cout << "1 - Enter value by index" << std::endl;
+				std::cout << "2 - Obj broken_line + obj broken_line" << std::endl;
+				std::cout << "3 - Obj broken_line + obj point" << std::endl;
+				std::cout << "4 - Obj point + obj broken_line" << std::endl;
+				std::cout << "5 - Calculate" << std::endl;
+				std::cout << "6 - Tack" << std::endl;
+				std::cout << "7 - Print obj broken_line" << std::endl;
+				std::cout << "8 - Compare obj a and obj b" << std::endl;
+				std::cout << "9 - Exit" << std::endl;
+				int z = getch();
+				system("cls");
+				if (z == '1')
+				{
+					int index;
+					std::complex<double> value_x, value_y; // 3
+					int l = '3';
+					std::cout << "Enter index" << std::endl;
+					index = scan<int>(1);
+					std::cout << "Enter value for x" << std::endl;
+					value_x = scan<std::complex<double>>(3);
+					std::cout << "Enter value for y" << std::endl;
+					value_y = scan<std::complex<double>>(3);
+					std::cout << "1 - add to line a\n2 - add to line b" << std::endl;
+					while (l != '1' && l != '2') l = getch();
+					try
+					{
+						if (l == '1')
+						{
+							a[index].x = value_x;
+							a[index].y = value_y;
+						}
+						else
+						{
+							b[index].x = value_x;
+							b[index].y = value_y;
+						}
+					}
+					catch (const char* msg)
+					{
+						std::cout << msg << std::endl;
+						if (getch()) z = '0';
+					}
+					system("cls");
+				}
+				if (z == '2')
+				{
+					std::cout << "line a" << std::endl;
+					std::cout << a;
+					std::cout << "line b" << std::endl;
+					std::cout << b;
+					try
+					{
+						broken_line<std::complex<double>> d(10);
+						d = a + b;
+						std::cout << "line a + line b" << std::endl;
+						std::cout << d;
+					}
+					catch (const char* msg)
+					{
+						std::cout << msg << std::endl;
+					}
+					if (getch()) z = '0';
+				}
+				if (z == '3')
+				{
+					std::cout << "line a" << std::endl;
+					std::cout << a;
+					std::cout << "point f" << std::endl << f.x << " " << f.y << std::endl << std::endl;
+					try
+					{
+						broken_line<std::complex<double>> d(6);
+						d = a + f;
+						std::cout << "line a + point f" << std::endl;
+						std::cout << d;
+					}
+					catch (const char* msg)
+					{
+						std::cout << msg << std::endl;
+					}
+					if (getch()) z = '0';
+				}
+				if (z == '4')
+				{
+					std::cout << "line a" << std::endl;
+					std::cout << a;
+					std::cout << "point f" << std::endl << f.x << " " << f.y << std::endl << std::endl;
+					try
+					{
+						broken_line<std::complex<double>> d(6);
+						d = f + a;
+						std::cout << "point f + line a" << std::endl;
+						std::cout << d;
+					}
+					catch (const char* msg)
+					{
+						std::cout << msg << std::endl;
+					}
+					if (getch()) z = '0';
+				}
+				if (z == '5')
+				{
+					std::cout << "line a" << std::endl;
+					std::cout << a;
+					std::cout << "lengh line a: " << calculate<std::complex<double>>(a);
+					if (getch()) z = '0';
+				}
+				if (z == '6')
+				{
+					broken_line<std::complex<double>> t(4);
+					t[0].x = 150;
+					t[0].y = 30;
+					t[1].x = 100;
+					t[1].y = 30;
+					t[2].x = 100;
+					t[2].y = 100;
+					t[3].x = 150;
+					t[3].y = 100;
+					print_graf<std::complex<double>>(t);
+				}
+				if (z == '7')
+				{
+					int l = '3';
+					std::cout << "1 - print line a\n2 - print line b" << std::endl;
+					while (l != '1' && l != '2') l = getch();
+					if (l == '1') std::cout << a;
+					else std::cout << b;
+					if (getch()) z = '0';
+				}
+				if (z == '8')
+				{
+					if (a == b) std::cout << "Objects are the same";
+					if (a != b) std::cout << "Objects are different";
+					if (getch()) z = '0';
+				}
+				if (z == '9') return 0;
+			}
 		}
 	}
 }
