@@ -2,12 +2,14 @@
 #include<iostream>
 #include<conio.h>
 #include"Graphics.h"
+#include"complex"
 
 Graphics g;
 
+template <class Type>
 struct point
 {
-	double x, y;
+	Type x, y;
 };
 
 class broken_line
@@ -172,7 +174,7 @@ std::ostream& operator << (std::ostream& os, const broken_line& v)
 
 bool test_int(char* b)
 {
-	
+
 	if (*b == '-') b++;
 	if (*b == 0) return false;
 	if (*b == '0' && *(b + 1) != 0) return false;
@@ -208,9 +210,9 @@ bool test_double(char* b)
 }
 
 
-double scan(bool n) 
+double scan(bool n)
 {
-	bool i = false; 
+	bool i = false;
 	while (true)
 	{
 		char* str = new char[256];
@@ -224,7 +226,7 @@ double scan(bool n)
 			return x;
 		}
 		else puts("Wrong data");
-		delete []str;
+		delete[]str;
 	}
 }
 
@@ -273,7 +275,7 @@ int main()
 				{
 					b[index].x = value_x;
 					b[index].y = value_y;
-				}	
+				}
 			}
 			catch (const char* msg)
 			{
