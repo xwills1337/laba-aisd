@@ -7,17 +7,18 @@
 Graphics g;
 
 template <class Type>
-struct point
-{
-	Type x, y;
-};
-template <class Type>
 class broken_line
 {
+
 	Type* line = NULL;
 	int size, count, grow;
 	const double accuracy = 1.0E-38;
 public:
+
+	struct point
+	{
+		Type x, y;
+	};
 
 	broken_line(int _size = 0, int _grow = 5) : size(_size), grow(_grow)
 	{
@@ -241,19 +242,11 @@ Type scan(int n)
 		std::cin.getline(str, 256);
 		if (n == 1) i = test_int(str);
 		if (n == 2) i = test_double(str);
-		if (n == 3) i = test_complex(str);
 		if (i)
 		{
-			Type x;
+			Type x = 0;
 			if (n == 1) x = atoi(str);
 			if (n == 2) x = atof(str);
-			if (n == 3)
-			{
-				char* tmp = str;
-				while (*tmp != ' ') tmp++;
-				tmp++;
-				x = (atof(str), atof(tmp));
-			}
 			delete[] str;
 			return x;
 		}
@@ -261,7 +254,26 @@ Type scan(int n)
 		delete[]str;
 	}
 }
-
+template<>
+std::complex<double> scan(int n)
+{
+	while (true)
+	{
+		char* str = new char[256];
+		std::cin.getline(str, 256);
+		if (test_complex(str))
+		{
+			char* tmp = str;
+			while (*tmp != ' ') tmp++;
+			tmp++;
+			std::complex<double> y(atof(str), atof(tmp));
+			delete[] str;
+			return y;
+		}
+		else puts("Wrong data");
+		delete[]str;
+	}
+}
 int main()
 {
 	broken_line a(5);
