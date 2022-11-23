@@ -189,6 +189,14 @@ double calculate(const broken_line<std::complex<double>>& v)
 	for (int i = 0; i < v.count - 1; i++) rez += sqrt(pow((v.line[i + 1].x.real() - v.line[i].x.real()), 2) + pow((v.line[i + 1].y.real() - v.line[i].y.real()), 2));
 	return rez;
 }
+template <>
+double calculate(const broken_line<std::complex<float>>& v)
+{
+	double rez = 0;
+	if (v.count < 2) return rez;
+	for (int i = 0; i < v.count - 1; i++) rez += sqrt(pow((v.line[i + 1].x.real() - v.line[i].x.real()), 2) + pow((v.line[i + 1].y.real() - v.line[i].y.real()), 2));
+	return rez;
+}
 
 template <class Type>
 void print_graf(const broken_line<Type>& v)
@@ -197,6 +205,11 @@ void print_graf(const broken_line<Type>& v)
 }
 template <>
 void print_graf(const broken_line<std::complex<double>>& v)
+{
+	for (int i = 0; i < v.count - 1; i++) g.DrawLine(float(v.line[i].x.real()), float(v.line[i].y.real()), float(v.line[i + 1].x.real()), float(v.line[i + 1].y.real()));
+}
+template <>
+void print_graf(const broken_line<std::complex<float>>& v)
 {
 	for (int i = 0; i < v.count - 1; i++) g.DrawLine(float(v.line[i].x.real()), float(v.line[i].y.real()), float(v.line[i + 1].x.real()), float(v.line[i + 1].y.real()));
 }
