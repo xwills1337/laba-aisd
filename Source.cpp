@@ -231,18 +231,29 @@ bool test_complex(char* b)
 	return test_double(b);
 }
 
-double scan(bool n)
+template <class Type>
+Type scan(int n)
 {
 	bool i = false;
 	while (true)
 	{
 		char* str = new char[256];
 		std::cin.getline(str, 256);
-		if (n == true) i = test_int(str);
-		else i = test_double(str);
+		if (n == 1) i = test_int(str);
+		if (n == 2) i = test_double(str);
+		if (n == 3) i = test_complex(str);
 		if (i)
 		{
-			double x = atof(str);
+			Type x;
+			if (n == 1) x = atoi(str);
+			if (n == 2) x = atof(str);
+			if (n == 3)
+			{
+				char* tmp = str;
+				while (*tmp != ' ') tmp++;
+				tmp++;
+				x = (atof(str), atof(tmp));
+			}
 			delete[] str;
 			return x;
 		}
