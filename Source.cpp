@@ -431,7 +431,150 @@ int main()
 		}
 		if (zl == '2')
 		{
-			return 0;
+			broken_line<double> a(5);
+			broken_line<double> b(5);
+			point<double> f;
+			f.x = 4.0;
+			f.y = 5.0;
+			while (true)
+			{
+				system("cls");
+				std::cout << "1 - Enter value by index" << std::endl;
+				std::cout << "2 - Obj broken_line + obj broken_line" << std::endl;
+				std::cout << "3 - Obj broken_line + obj point" << std::endl;
+				std::cout << "4 - Obj point + obj broken_line" << std::endl;
+				std::cout << "5 - Calculate" << std::endl;
+				std::cout << "6 - Tack" << std::endl;
+				std::cout << "7 - Print obj broken_line" << std::endl;
+				std::cout << "8 - Compare obj a and obj b" << std::endl;
+				std::cout << "9 - Exit" << std::endl;
+				int z = getch();
+				system("cls");
+				if (z == '1')
+				{
+					int index;
+					double value_x, value_y; // 2
+					int l = '3';
+					std::cout << "Enter index" << std::endl;
+					index = scan<int>(1);
+					std::cout << "Enter value for x" << std::endl;
+					value_x = scan<double>(2);
+					std::cout << "Enter value for y" << std::endl;
+					value_y = scan<double>(2);
+					std::cout << "1 - add to line a\n2 - add to line b" << std::endl;
+					while (l != '1' && l != '2') l = getch();
+					try
+					{
+						if (l == '1')
+						{
+							a[index].x = value_x;
+							a[index].y = value_y;
+						}
+						else
+						{
+							b[index].x = value_x;
+							b[index].y = value_y;
+						}
+					}
+					catch (const char* msg)
+					{
+						std::cout << msg << std::endl;
+						if (getch()) z = '0';
+					}
+					system("cls");
+				}
+				if (z == '2')
+				{
+					std::cout << "line a" << std::endl;
+					std::cout << a;
+					std::cout << "line b" << std::endl;
+					std::cout << b;
+					try
+					{
+						broken_line<double> d(10);
+						d = a + b;
+						std::cout << "line a + line b" << std::endl;
+						std::cout << d;
+					}
+					catch (const char* msg)
+					{
+						std::cout << msg << std::endl;
+					}
+					if (getch()) z = '0';
+				}
+				if (z == '3')
+				{
+					std::cout << "line a" << std::endl;
+					std::cout << a;
+					std::cout << "point f" << std::endl << f.x << " " << f.y << std::endl << std::endl;
+					try
+					{
+						broken_line<double> d(6);
+						d = a + f;
+						std::cout << "line a + point f" << std::endl;
+						std::cout << d;
+					}
+					catch (const char* msg)
+					{
+						std::cout << msg << std::endl;
+					}
+					if (getch()) z = '0';
+				}
+				if (z == '4')
+				{
+					std::cout << "line a" << std::endl;
+					std::cout << a;
+					std::cout << "point f" << std::endl << f.x << " " << f.y << std::endl << std::endl;
+					try
+					{
+						broken_line<double> d(6);
+						d = f + a;
+						std::cout << "point f + line a" << std::endl;
+						std::cout << d;
+					}
+					catch (const char* msg)
+					{
+						std::cout << msg << std::endl;
+					}
+					if (getch()) z = '0';
+				}
+				if (z == '5')
+				{
+					std::cout << "line a" << std::endl;
+					std::cout << a;
+					std::cout << "lengh line a: " << a.calculate();
+					if (getch()) z = '0';
+				}
+				if (z == '6')
+				{
+					broken_line<double> t(4);
+					t[0].x = 150;
+					t[0].y = 30;
+					t[1].x = 100;
+					t[1].y = 30;
+					t[2].x = 100;
+					t[2].y = 100;
+					t[3].x = 150;
+					t[3].y = 100;
+					t.print_graf();
+				}
+				if (z == '7')
+				{
+					int l = '3';
+					std::cout << "1 - print line a\n2 - print line b" << std::endl;
+					while (l != '1' && l != '2') l = getch();
+					if (l == '1') std::cout << a;
+					else std::cout << b;
+					if (getch()) z = '0';
+				}
+				if (z == '8')
+				{
+					if (a == b) std::cout << "Objects are the same";
+					if (a != b) std::cout << "Objects are different";
+					if (getch()) z = '0';
+				}
+				if (z == '9') return 0;
+			}
 		}
 		if (zl == '3')
 		{
