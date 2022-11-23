@@ -16,7 +16,7 @@ class broken_line
 {
 	Type* line = NULL;
 	int size, count, grow;
-	const double accuracy = 0.0000000000001;
+	const double accuracy = 1.0E-38;
 public:
 
 	broken_line(int _size = 0, int _grow = 5) : size(_size), grow(_grow)
@@ -172,7 +172,6 @@ public:
 
 bool test_int(char* b)
 {
-
 	if (*b == '-') b++;
 	if (*b == 0) return false;
 	if (*b == '0' && *(b + 1) != 0) return false;
@@ -191,7 +190,7 @@ bool test_double(char* b)
 	if (*b == '0' && (*(b + 1) != 0 && *(b + 1) != '.')) return false;
 	while (*b != 0 && *b != '.')
 	{
-		if (*b < '0' || *b>'9') return false;
+		if (*b < '0' || *b > '9') return false;
 		b++;
 	}
 	if (*b == '.')
@@ -200,13 +199,37 @@ bool test_double(char* b)
 		if (*b == 0) return false;
 		while (*b)
 		{
-			if (*b < '0' || *b>'9') return false;
+			if (*b < '0' || *b > '9') return false;
 			b++;
 		}
 	}
 	return true;
 }
 
+bool test_complex(char* b)
+{
+	if (*b == '-') b++;
+	if (*b == 0 || *b == '.' || *b == ' ') return false;
+	if (*b == '0' && (*(b + 1) != ' ' && *(b + 1) != '.')) return false;
+	while (*b != 0 && *b != '.' && *b != ' ')
+	{
+		if (*b < '0' || *b > '9') return false;
+		b++;
+	}
+	if (*b == '.')
+	{
+		b++;
+		if (*b == 0) return false;
+		while (*b != 0 && *b != ' ')
+		{
+			if (*b < '0' || *b > '9') return false;
+			b++;
+		}
+	}
+	if (*b == 0) return false;
+	b++;
+	return test_double(b);
+}
 
 double scan(bool n)
 {
