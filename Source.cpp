@@ -11,10 +11,10 @@ struct point
 {
 	Type x, y;
 };
-
+template <class Type>
 class broken_line
 {
-	point* line = NULL;
+	Type* line = NULL;
 	int size, count, grow;
 	const double accuracy = 0.0000000000001;
 public:
@@ -154,23 +154,21 @@ public:
 	int get_size() const { return size; }
 	int get_count() const { return count; }
 	int get_grow() const { return grow; }
+	friend broken_line operator + (const point& p, const broken_line& v)
+	{
+		broken_line temp(0);
+		temp += p;
+		temp += v;
+		return temp;
+	}
+	friend std::ostream& operator << (std::ostream& os, const broken_line& v)
+	{
+		os << "size: " << v.get_size() << std::endl << "count: " << v.get_count() << std::endl;
+		for (int i = 0; i < v.get_count(); i++) os << v[i].x << " " << v[i].y << std::endl;
+		os << std::endl;
+		return os;
+	}
 };
-
-broken_line operator + (const point& p, const broken_line& v)
-{
-	broken_line temp(0);
-	temp += p;
-	temp += v;
-	return temp;
-}
-
-std::ostream& operator << (std::ostream& os, const broken_line& v)
-{
-	os << "size: " << v.get_size() << std::endl << "count: " << v.get_count() << std::endl;
-	for (int i = 0; i < v.get_count(); i++) os << v[i].x << " " << v[i].y << std::endl;
-	os << std::endl;
-	return os;
-}
 
 bool test_int(char* b)
 {
