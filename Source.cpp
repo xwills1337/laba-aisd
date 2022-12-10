@@ -3,6 +3,7 @@
 #include<conio.h>
 #include"Graphics.h"
 #include"complex"
+#include <vector>
 
 Graphics g;
 
@@ -27,16 +28,13 @@ void print_graf(const broken_line<Type>& v);
 template <class Type>
 class broken_line
 {
-	point<Type>* line;
-	int size, count, grow;
+	std::vector<point<Type>> line;
 public:
-	broken_line(int _size = 0, int _grow = 5) : size(_size), grow(_grow)
+	broken_line(int _size)
 	{
 		if (_size < 0) throw "Error! Array size cannot be negative";
-		if (_grow < 0) throw "Error! grow cannot be negative";
-		line = new point<Type>[size];
-		count = size;
-		for (int i = 0; i < count; i++)
+
+		for (int i = 0; i < line.size(); i++)
 		{
 			line[i].x = 0;
 			line[i].y = 0;
@@ -47,33 +45,16 @@ public:
 
 	~broken_line() = default;
 
-	void clear()
-	{
-		delete[] line;
-		size = 0;
-		count = 0;
-	}
-
 	broken_line& operator = (const broken_line&) = default;
 
 	broken_line& operator += (const broken_line& v)
 	{
-		if (size - (count + v.count) > grow) size = count + v.count;
-		else size += grow;
-		point<Type>* tmp = new point<Type>[size];
-		for (int i = 0; i < count && i < size; i++)
+		for (int i = 0; i < (line.size() + v.line.size()); i++)
 		{
-			tmp[i].x = line[i].x;
-			tmp[i].y = line[i].y;
+			int n = line.size();
+			line[n].x = v.line[i].x;
+			line[n].y = v.line[i].y;
 		}
-		for (int i = 0, j = count; i < v.count && j < size; i++, j++)
-		{
-			tmp[j].x = v.line[i].x;
-			tmp[j].y = v.line[i].y;
-		}
-		delete[] line;
-		line = tmp;
-		count += v.count;
 		return *this;
 	}
 
@@ -86,20 +67,9 @@ public:
 
 	broken_line<Type>& operator += (const point<Type> &v)
 	{
-		if (count + 1 > size) size += grow;
-		point<Type>* tmp = new point<Type>[size];
-		for (int i = 0; i < count && i < size; i++)
-		{
-			tmp[i].x = line[i].x;
-			tmp[i].y = line[i].y;
-		}
-		if (count < size)
-		{
-			tmp[count].x = v.x;
-			tmp[count++].y = v.y;
-		}
-		delete[] line;
-		line = tmp;
+		int n = line.size();
+		line[n].x = v.x;
+		line[n].y = v.y;
 		return *this;
 	}
 
@@ -112,14 +82,14 @@ public:
 
 	point<Type>& operator[] (int index) const
 	{
-		if (index < count && count != 0) return line[index];
+		if (index < line.size()) return line[index];
 		else throw "Error! Element with this index does not exist.";
 	}
 
 	bool operator == (const broken_line& v)
 	{
-		if (size != v.size || count != v.count || grow != v.grow) return false;
-		for (int i = 0; i < count; i++) if (accuracy < abs(line[i].x != v.line[i].x) || accuracy < abs(line[i].y != v.line[i].y)) return false;
+		if (line.size() != v.line.size()) return false;
+		for (int i = 0; i < line.size(); i++) if (accuracy < abs(line[i].x != v.line[i].x) || accuracy < abs(line[i].y != v.line[i].y)) return false;
 		return true;
 	}
 	bool operator != (const broken_line& v)
@@ -131,9 +101,7 @@ public:
 
 	friend void print_graf<>(const broken_line<Type>& v);
 	
-	int get_size() const { return size; }
-	int get_count() const { return count; }
-	int get_grow() const { return grow; }
+	int get_size() const { return line.size(); }
 
 	friend broken_line<Type> operator + (const point<Type>& p, const broken_line<Type>& v)
 	{
@@ -145,8 +113,8 @@ public:
 
 	friend std::ostream& operator << (std::ostream& os, const broken_line& v)
 	{
-		os << "size: " << v.get_size() << std::endl << "count: " << v.get_count() << std::endl;
-		for (int i = 0; i < v.get_count(); i++) os << v[i].x << " " << v[i].y << std::endl;
+		os << "size: " << v.get_size() << std::endl;
+		for (int i = 0; i < v.get_size(); i++) os << v[i].x << " " << v[i].y << std::endl;
 		os << std::endl;
 		return os;
 	}
@@ -156,41 +124,41 @@ template <class Type>
 double calculate(const broken_line<Type>& v)
 {
 	double rez = 0;
-	if (v.count < 2) return rez;
-	for (int i = 0; i < v.count - 1; i++) rez += sqrt(pow((v.line[i + 1].x - v.line[i].x), 2) + pow((v.line[i + 1].y - v.line[i].y), 2));
+	if (v.get_size() < 2) return rez;
+	for (int i = 0; i < v.get_size() - 1; i++) rez += sqrt(pow((v.line[i + 1].x - v.line[i].x), 2) + pow((v.line[i + 1].y - v.line[i].y), 2));
 	return rez;
 }
 template <>
 double calculate(const broken_line<std::complex<double>>& v)
 {
 	double rez = 0;
-	if (v.count < 2) return rez;
-	for (int i = 0; i < v.count - 1; i++) rez += sqrt(pow((v.line[i + 1].x.real() - v.line[i].x.real()), 2) + pow((v.line[i + 1].y.real() - v.line[i].y.real()), 2));
+	if (v.get_size() < 2) return rez;
+	for (int i = 0; i < v.get_size() - 1; i++) rez += sqrt(pow((v.line[i + 1].x.real() - v.line[i].x.real()), 2) + pow((v.line[i + 1].y.real() - v.line[i].y.real()), 2));
 	return rez;
 }
 template <>
 double calculate(const broken_line<std::complex<float>>& v)
 {
 	double rez = 0;
-	if (v.count < 2) return rez;
-	for (int i = 0; i < v.count - 1; i++) rez += sqrt(pow((v.line[i + 1].x.real() - v.line[i].x.real()), 2) + pow((v.line[i + 1].y.real() - v.line[i].y.real()), 2));
+	if (v.get_size() < 2) return rez;
+	for (int i = 0; i < v.get_size() - 1; i++) rez += sqrt(pow((v.line[i + 1].x.real() - v.line[i].x.real()), 2) + pow((v.line[i + 1].y.real() - v.line[i].y.real()), 2));
 	return rez;
 }
 
 template <class Type>
 void print_graf(const broken_line<Type>& v)
 {
-	for (int i = 0; i < v.count - 1; i++) g.DrawLine(float(v.line[i].x), float(v.line[i].y), float(v.line[i + 1].x), float(v.line[i + 1].y));
+	for (int i = 0; i < v.get_size() - 1; i++) g.DrawLine(float(v.line[i].x), float(v.line[i].y), float(v.line[i + 1].x), float(v.line[i + 1].y));
 }
 template <>
 void print_graf(const broken_line<std::complex<double>>& v)
 {
-	for (int i = 0; i < v.count - 1; i++) g.DrawLine(float(v.line[i].x.real()), float(v.line[i].y.real()), float(v.line[i + 1].x.real()), float(v.line[i + 1].y.real()));
+	for (int i = 0; i < v.get_size() - 1; i++) g.DrawLine(float(v.line[i].x.real()), float(v.line[i].y.real()), float(v.line[i + 1].x.real()), float(v.line[i + 1].y.real()));
 }
 template <>
 void print_graf(const broken_line<std::complex<float>>& v)
 {
-	for (int i = 0; i < v.count - 1; i++) g.DrawLine(float(v.line[i].x.real()), float(v.line[i].y.real()), float(v.line[i + 1].x.real()), float(v.line[i + 1].y.real()));
+	for (int i = 0; i < v.get_size() - 1; i++) g.DrawLine(float(v.line[i].x.real()), float(v.line[i].y.real()), float(v.line[i + 1].x.real()), float(v.line[i + 1].y.real()));
 }
 ///////////////////////////////////////
 bool test_int(char* b)
