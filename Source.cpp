@@ -12,6 +12,9 @@ struct point
 	Type x, y;
 };
 
+const double accuracy = 1.0E-38;
+
+
 template <class Type>
 class broken_line;
 
@@ -26,7 +29,6 @@ class broken_line
 {
 	point<Type>* line;
 	int size, count, grow;
-	const double accuracy = 1.0E-38;
 public:
 	broken_line(int _size = 0, int _grow = 5) : size(_size), grow(_grow)
 	{
@@ -41,23 +43,9 @@ public:
 		}
 	}
 
-	broken_line(const broken_line& v)
-	{
-		size = v.size;
-		count = v.count;
-		grow = v.grow;
-		line = new point<Type>[size];
-		for (int i = 0; i < count && i < size; i++)
-		{
-			line[i].x = v.line[i].x;
-			line[i].y = v.line[i].y;
-		}
-	}
+	broken_line(const broken_line&) = default;
 
-	~broken_line()
-	{
-		clear();
-	}
+	~broken_line() = default;
 
 	void clear()
 	{
@@ -66,16 +54,7 @@ public:
 		count = 0;
 	}
 
-	broken_line& operator = (const broken_line& v)
-	{
-		if (size < v.count || count > v.count) throw "Right object data cannot be passed to left object";
-		for (int i = 0; i < count; i++)
-		{
-			line[i].x = v.line[i].x;
-			line[i].y = v.line[i].y;
-		}
-		return *this;
-	}
+	broken_line& operator = (const broken_line&) = default;
 
 	broken_line& operator += (const broken_line& v)
 	{
@@ -213,7 +192,7 @@ void print_graf(const broken_line<std::complex<float>>& v)
 {
 	for (int i = 0; i < v.count - 1; i++) g.DrawLine(float(v.line[i].x.real()), float(v.line[i].y.real()), float(v.line[i + 1].x.real()), float(v.line[i + 1].y.real()));
 }
-
+///////////////////////////////////////
 bool test_int(char* b)
 {
 	if (*b == '-') b++;
@@ -401,9 +380,13 @@ int main()
 			try
 			{
 				broken_line<int> d(10);
-				d = a + b;
+				d = a;
+				std::cout << a;
+				d += b;
 				std::cout << "line a + line b" << std::endl;
 				std::cout << d;
+				std::cout << a;
+				std::cout << b;
 			}
 			catch (const char* msg)
 			{
