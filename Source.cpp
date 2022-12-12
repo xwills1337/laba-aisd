@@ -4,7 +4,7 @@
 #include"Graphics.h"
 #include"complex"
 #include<vector>
-#include<typeinfo>
+#include <iterator>
 Graphics g;
 
 template <class Type>
@@ -76,18 +76,15 @@ public:
 		return temp;
 	}
 
-	point<Type>& operator[] (int index)
+	const point<Type>& operator[] (int index) const
 	{
 		if (index < line.size() || line.size() == 0) return line[index];
 		else throw "Error! Element with this index does not exist.";
 	}
-	point<Type>& operator[] (int index) const
+
+	point<Type>& operator[] (int index)
 	{
-		if (index < line.size() || line.size() == 0)
-		{
-			point<Type> f(line[index]);
-			return f;
-		}
+		if (index < line.size() || line.size() == 0) return line[index];
 		else throw "Error! Element with this index does not exist.";
 	}
 
@@ -105,6 +102,17 @@ public:
 	friend double calculate<>(const broken_line<Type>& v);
 
 	friend void print_graf<>(const broken_line<Type>& v);
+
+	auto begin() 
+	{
+		return line.begin();
+
+	}
+
+	auto end() 
+	{
+		return line.end();
+	}
 	
 	int get_size() const { return line.size(); }
 
@@ -119,10 +127,9 @@ public:
 	friend std::ostream& operator << (std::ostream& os, const broken_line<Type>& v)
 	{
 		os << "size: " << v.get_size() << std::endl;
-		for (int i = 0; i < v.get_size(); i++)
+		for (const auto i : v.line) 
 		{
-			os << v[i].x << " ";
-			os << v[i].y << std::endl;
+			os << i.x << " " << i.y << std::endl;
 		}
 		os << std::endl;
 		return os;
@@ -355,13 +362,9 @@ int main()
 			try
 			{
 				broken_line<int> d(10);
-				d = a;
-				std::cout << a;
-				d += b;
+				d = a + b;
 				std::cout << "line a + line b" << std::endl;
 				std::cout << d;
-				std::cout << a;
-				std::cout << b;
 			}
 			catch (const char* msg)
 			{
