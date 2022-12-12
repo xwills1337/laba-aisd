@@ -3,14 +3,20 @@
 #include<conio.h>
 #include"Graphics.h"
 #include"complex"
-#include <vector>
-
+#include<vector>
+#include<typeinfo>
 Graphics g;
 
 template <class Type>
 struct point
 {
 	Type x, y;
+	point(Type _x=0, Type _y=0): x(_x), y(_y) {}
+	point(const point& v)
+	{
+		x = v.x;
+		y = v.y;
+	}
 };
 
 const double accuracy = 1.0E-38;
@@ -30,15 +36,11 @@ class broken_line
 {
 	std::vector<point<Type>> line;
 public:
-	broken_line(int _size)
+	broken_line(int _size=0)
 	{
 		if (_size < 0) throw "Error! Array size cannot be negative";
 
-		for (int i = 0; i < line.size(); i++)
-		{
-			line[i].x = 0;
-			line[i].y = 0;
-		}
+		for (int i = 0; i < _size; i++) line.push_back(point<Type>(1, 2));
 	}
 
 	broken_line(const broken_line&) = default;
@@ -49,12 +51,8 @@ public:
 
 	broken_line& operator += (const broken_line& v)
 	{
-		for (int i = 0; i < (line.size() + v.line.size()); i++)
-		{
-			int n = line.size();
-			line[n].x = v.line[i].x;
-			line[n].y = v.line[i].y;
-		}
+		int x = line.size();
+		for (int i = 0; i < v.line.size(); i++) line.push_back(point<Type>(v.line[i].x, v.line[i].y));
 		return *this;
 	}
 
@@ -67,9 +65,7 @@ public:
 
 	broken_line<Type>& operator += (const point<Type> &v)
 	{
-		int n = line.size();
-		line[n].x = v.x;
-		line[n].y = v.y;
+		line.push_back(point<Type>(v.x, v.y));
 		return *this;
 	}
 
@@ -80,9 +76,18 @@ public:
 		return temp;
 	}
 
+	point<Type>& operator[] (int index)
+	{
+		if (index < line.size() || line.size() == 0) return line[index];
+		else throw "Error! Element with this index does not exist.";
+	}
 	point<Type>& operator[] (int index) const
 	{
-		if (index < line.size()) return line[index];
+		if (index < line.size() || line.size() == 0)
+		{
+			point<Type> f(line[index]);
+			return f;
+		}
 		else throw "Error! Element with this index does not exist.";
 	}
 
@@ -111,10 +116,14 @@ public:
 		return temp;
 	}
 
-	friend std::ostream& operator << (std::ostream& os, const broken_line& v)
+	friend std::ostream& operator << (std::ostream& os, const broken_line<Type>& v)
 	{
 		os << "size: " << v.get_size() << std::endl;
-		for (int i = 0; i < v.get_size(); i++) os << v[i].x << " " << v[i].y << std::endl;
+		for (int i = 0; i < v.get_size(); i++)
+		{
+			os << v[i].x << " ";
+			os << v[i].y << std::endl;
+		}
 		os << std::endl;
 		return os;
 	}
@@ -284,26 +293,24 @@ std::complex<float> scan()
 	}
 }
 
-
 int main()
 {
 	broken_line<int> a(5);
 	broken_line<int> b(5);
-	point<int> f;
-	f.x = 4;
-	f.y = 5;
+	point<int> f(4, 5);
 	while (true)
 	{
 		system("cls");
+		std::cout << a;
+		std::cout << b;
 		std::cout << "1 - Enter value by index" << std::endl;
 		std::cout << "2 - Obj broken_line + obj broken_line" << std::endl;
 		std::cout << "3 - Obj broken_line + obj point" << std::endl;
 		std::cout << "4 - Obj point + obj broken_line" << std::endl;
 		std::cout << "5 - Calculate" << std::endl;
 		std::cout << "6 - Task" << std::endl;
-		std::cout << "7 - Print obj broken_line" << std::endl;
-		std::cout << "8 - Compare obj a and obj b" << std::endl;
-		std::cout << "9 - Exit" << std::endl;
+		std::cout << "7 - Compare obj a and obj b" << std::endl;
+		std::cout << "8 - Exit" << std::endl;
 		int z = getch();
 		system("cls");
 		if (z == '1')
@@ -420,19 +427,10 @@ int main()
 		}
 		if (z == '7')
 		{
-			int l = '3';
-			std::cout << "1 - print line a\n2 - print line b" << std::endl;
-			while (l != '1' && l != '2') l = getch();
-			if (l == '1') std::cout << a;
-			else std::cout << b;
-			if (getch()) z = '0';
-		}
-		if (z == '8')
-		{
 			if (a == b) std::cout << "Objects are the same";
 			if (a != b) std::cout << "Objects are different";
 			if (getch()) z = '0';
 		}
-		if (z == '9') return 0;
+		if (z == '8') return 0;
 	}
 }
